@@ -96,6 +96,7 @@ const PAGE = `<!doctype html>
   function getKey(){return sessionStorage.getItem(KEY_NAME)||''}
   function esc(s){return String(s).replace(/[&<>"]/g,function(c){return {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]})}
   function fmtDate(ms){return new Date(ms).toISOString().slice(0,16).replace('T',' ')}
+  function refHost(r){if(r==='direct')return 'direct';try{return new URL(r).host||r}catch(e){return r}}
   function msg(t,err){var m=$('#msg');m.textContent=t||'';m.className=err?'err':'ok'}
 
   function api(path,opts){
@@ -136,9 +137,11 @@ const PAGE = `<!doctype html>
         return '<div class="bar"><span class="dim">'+d.day+'</span><span class="track"><i style="width:'+w+'%"></i></span><span class="cnt">'+d.clicks+'</span></div>';
       }).join('') || '<div class="dim">No human clicks yet.</div>';
       var geo=s.byCountry.map(function(c){return '<li>'+esc(c.country)+' <span class="dim">— '+c.clicks+'</span></li>'}).join('');
+      var ref=(s.byReferer||[]).map(function(c){return '<li>'+esc(refHost(c.referer))+' <span class="dim">— '+c.clicks+'</span></li>'}).join('');
       $('#detail').innerHTML='<h3>/'+esc(code)+' · '+s.total+' clicks <span class="dim">(bots excluded)</span></h3>'
         +'<div>'+bars+'</div>'
-        +(geo?'<h4 class="dim">By country</h4><ul class="geo">'+geo+'</ul>':'');
+        +(geo?'<h4 class="dim">By country</h4><ul class="geo">'+geo+'</ul>':'')
+        +(ref?'<h4 class="dim">By referrer</h4><ul class="geo">'+ref+'</ul>':'');
       $('#detail').style.display='block';
       $('#detail').scrollIntoView({behavior:'smooth',block:'nearest'});
     }).catch(function(e){msg(e.message,true)});

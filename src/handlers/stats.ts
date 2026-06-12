@@ -39,11 +39,19 @@ export async function handleStats(request: Request, env: Env, code: string): Pro
     .bind(...binds)
     .all();
 
+  const byReferer = await env.DB.prepare(
+    `SELECT COALESCE(NULLIF(referer, ''), 'direct') AS referer, COUNT(*) AS clicks
+     FROM clicks ${where} GROUP BY referer ORDER BY clicks DESC LIMIT 50`,
+  )
+    .bind(...binds)
+    .all();
+
   return json({
     code,
     total: total?.total ?? 0,
     excludeBots,
     byDay: byDay.results,
     byCountry: byCountry.results,
+    byReferer: byReferer.results,
   });
 }

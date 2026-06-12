@@ -24,8 +24,8 @@ export default {
 
     if (pathname === "/admin" && method === "GET") return handleAdmin();
 
-    // Anything else is a short code: GET /:code
-    if (method !== "GET") return methodNotAllowed();
+    // Anything else is a short code: GET (or HEAD) /:code
+    if (method !== "GET" && method !== "HEAD") return methodNotAllowed();
     const code = pathname.slice(1).replace(/\/+$/, "");
     return handleResolve(code, request, env, ctx);
   },

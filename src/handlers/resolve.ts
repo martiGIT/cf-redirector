@@ -26,7 +26,9 @@ export async function handleResolve(
     return notFound("Unknown short link");
   }
 
-  ctx.waitUntil(logClick(env, code, request));
+  // HEAD requests (curl -I, link checkers) get the redirect headers but are not
+  // counted as clicks.
+  if (request.method !== "HEAD") ctx.waitUntil(logClick(env, code, request));
 
   const status = parseStatus(env.REDIRECT_STATUS);
   return redirect(row.url, status);

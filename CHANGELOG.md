@@ -17,3 +17,5 @@ All notable changes to this project are documented here. The format follows
   Dependabot. Least-privilege workflow permissions. `SECURITY.md` disclosure policy.
 - Built-in stats panel at `/admin` (zero-dependency single page; key kept in
   sessionStorage). `GET /api/links` now includes a per-link click count.
+- `HEAD /:code` now redirects like `GET` (was `405`); HEAD is not counted as a
+  click. Referrer breakdown added to `/api/stats/:code` and the panel.

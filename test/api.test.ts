@@ -116,3 +116,33 @@ describe("admin panel", () => {
     expect(await res.text()).toContain("cf-redirector");
   });
 });
+
+describe("HEAD resolve", () => {
+  it("redirects HEAD like GET but does not count a click", async () => {
+    await createLink({ url: "https://example.com/dest", code: "head" });
+    const res = await SELF.fetch(`${BASE}/head`, { method: "HEAD", redirect: "manual" });
+    expect(res.status).toBe(302);
+    expect(res.headers.get("location")).toBe("https://example.com/dest");
+    const stats = (await (
+      await SELF.fetch(`${BASE}/api/stats/head`, { headers: AUTH })
+    ).json()) as { total: number };
+    expect(stats.total).toBe(0);
+  });
+});
+
+describe("stats: referrer breakdown", () => {
+  it("groups clicks by referrer ('direct' when absent)", async () => {
+    await createLink({ url: "https://example.com", code: "ref" });
+    const insert = env.DB.prepare(
+      "INSERT INTO clicks (code, ts, ua, referer, country) VALUES (?, ?, ?, ?, ?)",
+    );
+    await insert.bind("ref", Date.now(), "Mozilla/5.0", "https://t.co/x", "PL").run();
+    await insert.bind("ref", Date.now(), "Mozilla/5.0", null, "PL").run();
+    const s = (await (await SELF.fetch(`${BASE}/api/stats/ref`, { headers: AUTH })).json()) as {
+      byReferer: Array<{ referer: string; clicks: number }>;
+    };
+    const map = Object.fromEntries(s.byReferer.map((r) => [r.referer, r.clicks]));
+    expect(map["https://t.co/x"]).toBe(1);
+    expect(map.direct).toBe(1);
+  });
+});
