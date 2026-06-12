@@ -105,10 +105,45 @@ curl -i https://go.example.com/hi
 curl "https://go.example.com/api/stats/hi" -H "Authorization: Bearer $API_KEY"
 ```
 
-## 7. Automated deploy (GitHub Actions)
+## 7. Automated deploy (GitHub Actions) — optional, for your own repo
 
-`.github/workflows/deploy.yml` deploys on every push to `main` (after typecheck
-and tests pass) and on manual dispatch. It needs two repository secrets.
+This OSS repo deliberately **does not ship an active deploy workflow** — it would
+otherwise carry deployment automation for one specific Cloudflare account. Instead,
+add the example below to **your own deployment repo** (e.g. a private repo in your
+org). It deploys on every push to `main` (after typecheck and tests pass) and on
+manual dispatch, and needs the two repository secrets from 7a–7c.
+
+Save as `.github/workflows/deploy.yml` in your deployment repo:
+
+```yaml
+name: Deploy
+
+on:
+  push:
+    branches: [main]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+      - run: npm ci
+      - run: npm run typecheck
+      - run: npm test
+      - name: Deploy to Cloudflare Workers
+        uses: cloudflare/wrangler-action@v4
+        with:
+          apiToken: ${{ secrets.CLOUDFLARE_API_TOKEN }}
+          accountId: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
+```
 
 ### 7a. Create a Cloudflare API token
 
