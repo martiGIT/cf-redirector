@@ -15,3 +15,5 @@ All notable changes to this project are documented here. The format follows
 - Vitest (workers pool) test suite and GitHub Actions CI.
 - Security tooling: Trivy (deps/secrets/misconfig), CodeQL, `npm audit`, and
   Dependabot. Least-privilege workflow permissions. `SECURITY.md` disclosure policy.
+- Built-in stats panel at `/admin` (zero-dependency single page; key kept in
+  sessionStorage). `GET /api/links` now includes a per-link click count.

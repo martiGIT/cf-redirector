@@ -18,4 +18,4 @@ export function isValidCode(code: string): boolean {
 }
 
 /** Path prefixes that must never be usable as short codes. */
-export const RESERVED_CODES = new Set(["api", "health", "favicon.ico", "robots.txt"]);
+export const RESERVED_CODES = new Set(["api", "admin", "health", "favicon.ico", "robots.txt"]);

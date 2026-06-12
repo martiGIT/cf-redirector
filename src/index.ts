@@ -1,3 +1,4 @@
+import { handleAdmin } from "./handlers/admin";
 import { handleExport } from "./handlers/export";
 import { handleCreate, handleDelete, handleGet, handleList } from "./handlers/links";
 import { handleResolve } from "./handlers/resolve";
@@ -20,6 +21,8 @@ export default {
       }
       return json({ service: "cf-redirector", status: "ok" });
     }
+
+    if (pathname === "/admin" && method === "GET") return handleAdmin();
 
     // Anything else is a short code: GET /:code
     if (method !== "GET") return methodNotAllowed();

@@ -62,7 +62,9 @@ export async function handleList(request: Request, env: Env): Promise<Response> 
   const offset = Math.max(Number(params.get("offset")) || 0, 0);
 
   const { results } = await env.DB.prepare(
-    "SELECT code, url, created_at, tags, metadata FROM links ORDER BY created_at DESC LIMIT ? OFFSET ?",
+    `SELECT l.code, l.url, l.created_at, l.tags, l.metadata,
+       (SELECT COUNT(*) FROM clicks c WHERE c.code = l.code) AS clicks
+     FROM links l ORDER BY l.created_at DESC LIMIT ? OFFSET ?`,
   )
     .bind(limit, offset)
     .all();

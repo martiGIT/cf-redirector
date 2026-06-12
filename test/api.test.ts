@@ -92,3 +92,27 @@ describe("export", () => {
     expect(body.links).toHaveLength(2);
   });
 });
+
+describe("links list", () => {
+  it("includes a click count per link", async () => {
+    await createLink({ url: "https://example.com", code: "cnt" });
+    const insert = env.DB.prepare(
+      "INSERT INTO clicks (code, ts, ua, referer, country) VALUES (?, ?, ?, ?, ?)",
+    );
+    await insert.bind("cnt", Date.now(), "Mozilla/5.0", null, "PL").run();
+    const body = (await (await SELF.fetch(`${BASE}/api/links`, { headers: AUTH })).json()) as {
+      links: Array<{ code: string; clicks: number }>;
+    };
+    expect(body.links[0]?.code).toBe("cnt");
+    expect(body.links[0]?.clicks).toBe(1);
+  });
+});
+
+describe("admin panel", () => {
+  it("serves HTML without auth (page carries no secret)", async () => {
+    const res = await SELF.fetch(`${BASE}/admin`);
+    expect(res.status).toBe(200);
+    expect(res.headers.get("content-type")).toContain("text/html");
+    expect(await res.text()).toContain("cf-redirector");
+  });
+});

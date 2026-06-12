@@ -9,8 +9,8 @@ export default defineConfig({
     cloudflareTest({
       wrangler: { configPath: "./wrangler.toml" },
       miniflare: {
-        // Local API key for tests (overrides any .dev.vars value).
-        bindings: { API_KEY: "test-key" },
+        // Deterministic bindings for tests (independent of wrangler.toml / .dev.vars).
+        bindings: { API_KEY: "test-key", BASE_URL: "https://example.com" },
       },
     }),
   ],

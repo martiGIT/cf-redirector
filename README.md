@@ -141,6 +141,18 @@ curl "https://your.link/api/stats/spring?bots=exclude" -H "Authorization: Bearer
 | `GET /api/export`        | Full link-map dump (`?format=csv`)            |
 | `GET /health`            | Health check                                  |
 
+## Admin panel
+
+A tiny built-in stats panel is served at **`/admin`** — create links and browse
+per-code click charts (daily bars, by country, bots excluded). It has **no build
+step and no dependencies**: one self-contained HTML page.
+
+Auth is deliberately simple: the page carries no secret and is safe to serve
+publicly, because all data comes from the authenticated `/api/*` endpoints. You
+**paste your API key once** and it is kept in `sessionStorage` (sent as a Bearer
+token, never written into the page). For real SSO with no key handling, put
+**Cloudflare Access** in front of the `/admin` route — no code change needed.
+
 ## Configuration
 
 Set in `wrangler.toml` under `[vars]` (non-secret) or via `wrangler secret`:
