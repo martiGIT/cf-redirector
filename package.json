@@ -36,7 +36,7 @@
     "db:schema:local": "wrangler d1 execute cf-redirector --local --file=./schema.sql"
   },
   "devDependencies": {
-    "@biomejs/biome": "^2.4.16",
+    "@biomejs/biome": "^2.5.0",
     "@cloudflare/vitest-pool-workers": "^0.16.15",
     "@cloudflare/workers-types": "^4.20260612.1",
     "typescript": "^6.0.3",
