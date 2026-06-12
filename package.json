@@ -1,0 +1,46 @@
+{
+  "name": "cf-redirector",
+  "version": "0.1.0",
+  "description": "Self-hosted, privacy-first URL shortener and link redirector on Cloudflare Workers + D1. Permanent click analytics, zero runtime dependencies.",
+  "type": "module",
+  "license": "MIT",
+  "author": "martiGIT and contributors",
+  "homepage": "https://github.com/martiGIT/cf-redirector",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/martiGIT/cf-redirector.git"
+  },
+  "bugs": {
+    "url": "https://github.com/martiGIT/cf-redirector/issues"
+  },
+  "keywords": [
+    "url-shortener",
+    "link-shortener",
+    "redirect",
+    "cloudflare-workers",
+    "d1",
+    "analytics",
+    "self-hosted",
+    "serverless",
+    "edge"
+  ],
+  "scripts": {
+    "dev": "wrangler dev",
+    "deploy": "wrangler deploy",
+    "test": "vitest run",
+    "test:watch": "vitest",
+    "typecheck": "tsc --noEmit",
+    "lint": "biome check .",
+    "format": "biome format --write .",
+    "db:schema": "wrangler d1 execute cf-redirector --remote --file=./schema.sql",
+    "db:schema:local": "wrangler d1 execute cf-redirector --local --file=./schema.sql"
+  },
+  "devDependencies": {
+    "@biomejs/biome": "^2.4.16",
+    "@cloudflare/vitest-pool-workers": "^0.16.15",
+    "@cloudflare/workers-types": "^4.20260612.1",
+    "typescript": "^6.0.3",
+    "vitest": "^4.1.8",
+    "wrangler": "^4.100.0"
+  }
+}

@@ -1,0 +1,31 @@
+# cf-redirector — Cloudflare Worker configuration
+#
+# 1. Create the D1 database:   wrangler d1 create cf-redirector
+# 2. Paste the printed database_id below.
+# 3. Apply the schema:         npm run db:schema
+# 4. Set the API key secret:   wrangler secret put API_KEY
+# 5. Deploy:                   npm run deploy
+
+name = "cf-redirector"
+main = "src/index.ts"
+compatibility_date = "2026-06-01"
+
+# Public, non-secret configuration.
+[vars]
+# Base URL of your short domain. Used only to build `shortUrl` in API responses.
+BASE_URL = "https://example.com"
+# HTTP status used for redirects: 301 (permanent, cacheable — breaks click tracking),
+# 302 (temporary, recommended), or 307. Keep 302 so every click reaches the Worker.
+REDIRECT_STATUS = "302"
+# Where unknown codes go. Empty string = return 404 instead of redirecting.
+DEFAULT_REDIRECT = ""
+
+# Source of truth: link map + permanent click history.
+[[d1_databases]]
+binding = "DB"
+database_name = "cf-redirector"
+database_id = "REPLACE_WITH_YOUR_D1_DATABASE_ID"
+
+# API_KEY (Bearer token for /api/* write & read) is a secret, NOT a var:
+#   wrangler secret put API_KEY
+# For local dev, put it in .dev.vars (see .dev.vars.example).
