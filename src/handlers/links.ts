@@ -87,6 +87,43 @@ export async function handleGet(request: Request, env: Env, code: string): Promi
   return json({ ...link, clicks: clicks?.total ?? 0 });
 }
 
+/** PATCH /api/links/:code — update a link's destination url / tags / metadata. */
+export async function handleUpdate(request: Request, env: Env, code: string): Promise<Response> {
+  if (!isAuthorized(request, env)) return unauthorized();
+
+  let body: CreateBody;
+  try {
+    body = (await request.json()) as CreateBody;
+  } catch {
+    return badRequest("Invalid JSON body");
+  }
+
+  const sets: string[] = [];
+  const binds: (string | null)[] = [];
+  if (body.url !== undefined) {
+    const target = (body.url ?? "").trim();
+    if (!isHttpUrl(target)) return badRequest("Field 'url' must be a valid http(s) URL");
+    sets.push("url = ?");
+    binds.push(target);
+  }
+  if (body.tags !== undefined) {
+    sets.push("tags = ?");
+    binds.push(body.tags ?? null);
+  }
+  if (body.metadata !== undefined) {
+    sets.push("metadata = ?");
+    binds.push(body.metadata != null ? JSON.stringify(body.metadata) : null);
+  }
+  if (!sets.length) return badRequest("Nothing to update (send url, tags or metadata)");
+
+  binds.push(code);
+  const res = await env.DB.prepare(`UPDATE links SET ${sets.join(", ")} WHERE code = ?`)
+    .bind(...binds)
+    .run();
+  if (!res.meta.changes) return notFound();
+  return json({ updated: code });
+}
+
 /** DELETE /api/links/:code — remove a link and its clicks atomically. */
 export async function handleDelete(request: Request, env: Env, code: string): Promise<Response> {
   if (!isAuthorized(request, env)) return unauthorized();

@@ -146,3 +146,43 @@ describe("stats: referrer breakdown", () => {
     expect(map.direct).toBe(1);
   });
 });
+
+describe("update (PATCH)", () => {
+  it("changes a link's destination url", async () => {
+    await createLink({ url: "https://example.com/old", code: "ed" });
+    const res = await SELF.fetch(`${BASE}/api/links/ed`, {
+      method: "PATCH",
+      headers: AUTH,
+      body: JSON.stringify({ url: "https://example.com/new" }),
+    });
+    expect(res.status).toBe(200);
+    const r = await SELF.fetch(`${BASE}/ed`, { redirect: "manual" });
+    expect(r.headers.get("location")).toBe("https://example.com/new");
+  });
+
+  it("rejects an invalid url and a missing code", async () => {
+    await createLink({ url: "https://example.com", code: "ed2" });
+    const bad = await SELF.fetch(`${BASE}/api/links/ed2`, {
+      method: "PATCH",
+      headers: AUTH,
+      body: JSON.stringify({ url: "ftp://nope" }),
+    });
+    expect(bad.status).toBe(400);
+    const missing = await SELF.fetch(`${BASE}/api/links/nope`, {
+      method: "PATCH",
+      headers: AUTH,
+      body: JSON.stringify({ url: "https://example.com" }),
+    });
+    expect(missing.status).toBe(404);
+  });
+});
+
+describe("delete", () => {
+  it("removes a link so it no longer resolves", async () => {
+    await createLink({ url: "https://example.com", code: "rm" });
+    const del = await SELF.fetch(`${BASE}/api/links/rm`, { method: "DELETE", headers: AUTH });
+    expect(del.status).toBe(200);
+    const r = await SELF.fetch(`${BASE}/rm`, { redirect: "manual" });
+    expect(r.status).toBe(404);
+  });
+});

@@ -1,6 +1,6 @@
 import { handleAdmin } from "./handlers/admin";
 import { handleExport } from "./handlers/export";
-import { handleCreate, handleDelete, handleGet, handleList } from "./handlers/links";
+import { handleCreate, handleDelete, handleGet, handleList, handleUpdate } from "./handlers/links";
 import { handleResolve } from "./handlers/resolve";
 import { handleStats } from "./handlers/stats";
 import { json, methodNotAllowed, notFound } from "./lib/http";
@@ -49,6 +49,7 @@ function routeApi(
   if (linkMatch) {
     const code = decodeURIComponent(linkMatch[1] ?? "");
     if (method === "GET") return handleGet(request, env, code);
+    if (method === "PATCH") return handleUpdate(request, env, code);
     if (method === "DELETE") return handleDelete(request, env, code);
     return methodNotAllowed();
   }

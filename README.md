@@ -137,15 +137,17 @@ curl "https://your.link/api/stats/spring?bots=exclude" -H "Authorization: Bearer
 | ------------------------ | --------------------------------------------- |
 | `GET /api/links`         | List links (newest first; `?limit`, `?offset`)|
 | `GET /api/links/:code`   | One link + total click count                  |
+| `PATCH /api/links/:code` | Update destination url / tags / metadata      |
 | `DELETE /api/links/:code`| Delete a link and its clicks                  |
 | `GET /api/export`        | Full link-map dump (`?format=csv`)            |
 | `GET /health`            | Health check                                  |
 
 ## Admin panel
 
-A tiny built-in stats panel is served at **`/admin`** — create links and browse
-per-code click charts (daily bars, by country, bots excluded). It has **no build
-step and no dependencies**: one self-contained HTML page.
+A tiny built-in stats panel is served at **`/admin`** — create, edit and delete
+links, and browse per-code click charts (daily bars, by country, by referrer,
+bots excluded). It has **no build step and no dependencies**: one self-contained
+HTML page.
 
 Auth is deliberately simple: the page carries no secret and is safe to serve
 publicly, because all data comes from the authenticated `/api/*` endpoints. You

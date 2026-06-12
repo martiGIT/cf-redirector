@@ -19,3 +19,5 @@ All notable changes to this project are documented here. The format follows
   sessionStorage). `GET /api/links` now includes a per-link click count.
 - `HEAD /:code` now redirects like `GET` (was `405`); HEAD is not counted as a
   click. Referrer breakdown added to `/api/stats/:code` and the panel.
+- `PATCH /api/links/:code` to edit a link's destination url / tags / metadata.
+  The `/admin` panel gained edit and delete buttons per link.

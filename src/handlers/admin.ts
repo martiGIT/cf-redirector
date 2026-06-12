@@ -30,7 +30,11 @@ const PAGE = `<!doctype html>
   button:hover { background: #2ea043; }
   button.ghost { background: #21262d; }
   button.ghost:hover { background: #30363d; }
-  button.stbtn { background: #21262d; padding: 4px 10px; font-size: 13px; }
+  button.stbtn, button.edbtn, button.delbtn { background: #21262d; padding: 4px 10px; font-size: 13px; }
+  button.stbtn:hover, button.edbtn:hover { background: #30363d; }
+  button.delbtn { color: #ff9a8d; }
+  button.delbtn:hover { background: #5a2a2a; }
+  td.actions { white-space: nowrap; }
   .row { display: flex; gap: 10px; align-items: center; flex-wrap: wrap; }
   .top { display: flex; justify-content: space-between; align-items: center; margin-bottom: 22px; }
   form.create { display: flex; gap: 10px; margin: 0 0 18px; flex-wrap: wrap; }
@@ -120,10 +124,20 @@ const PAGE = `<!doctype html>
           +'<td class="num">'+l.clicks+'</td>'
           +'<td class="url" title="'+esc(l.url)+'">'+esc(l.url)+'</td>'
           +'<td class="dim">'+fmtDate(l.created_at)+'</td>'
-          +'<td><button class="stbtn" data-code="'+esc(l.code)+'">stats</button></td></tr>';
+          +'<td class="actions">'
+          +'<button class="stbtn" data-code="'+esc(l.code)+'">stats</button> '
+          +'<button class="edbtn" data-code="'+esc(l.code)+'" data-url="'+esc(l.url)+'">edit</button> '
+          +'<button class="delbtn" data-code="'+esc(l.code)+'">del</button>'
+          +'</td></tr>';
       }).join('') || '<tr><td colspan="5" class="dim">No links yet — create one above.</td></tr>';
       Array.prototype.forEach.call(document.querySelectorAll('.stbtn'),function(b){
         b.onclick=function(){showStats(b.getAttribute('data-code'))};
+      });
+      Array.prototype.forEach.call(document.querySelectorAll('.edbtn'),function(b){
+        b.onclick=function(){editLink(b.getAttribute('data-code'),b.getAttribute('data-url'))};
+      });
+      Array.prototype.forEach.call(document.querySelectorAll('.delbtn'),function(b){
+        b.onclick=function(){delLink(b.getAttribute('data-code'))};
       });
       msg('');
     }).catch(function(e){msg(e.message,true)});
@@ -145,6 +159,21 @@ const PAGE = `<!doctype html>
       $('#detail').style.display='block';
       $('#detail').scrollIntoView({behavior:'smooth',block:'nearest'});
     }).catch(function(e){msg(e.message,true)});
+  }
+
+  function editLink(code,url){
+    var nu=prompt('New destination URL for /'+code, url||'');
+    if(nu===null)return;
+    nu=nu.trim(); if(!nu)return;
+    api('/api/links/'+encodeURIComponent(code),{method:'PATCH',headers:{'Content-Type':'application/json'},body:JSON.stringify({url:nu})})
+      .then(function(){msg('Updated /'+code);load()}).catch(function(e){msg(e.message,true)});
+  }
+
+  function delLink(code){
+    if(!confirm('Delete /'+code+' and all its clicks? This cannot be undone.'))return;
+    api('/api/links/'+encodeURIComponent(code),{method:'DELETE'})
+      .then(function(){msg('Deleted /'+code);if($('#detail'))$('#detail').style.display='none';load()})
+      .catch(function(e){msg(e.message,true)});
   }
 
   function create(ev){
