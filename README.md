@@ -26,9 +26,27 @@ fills that gap:
   resolving is public (as it must be).
 - **Zero runtime dependencies** — auditable, fast, and built to last.
 
-Free-tier friendly: at typical link volumes everything fits comfortably within
-Cloudflare's free Workers + D1 allowances. See [docs/ARCHITECTURE.md](docs/ARCHITECTURE.md)
-for the limits and the documented scale path.
+## Cost — how far does the free tier go?
+
+cf-redirector is designed to run on **Cloudflare's free tier**, and for a link
+shortener that goes a long way. Every redirect is one Workers request, so that
+request limit is the effective ceiling — in practice you stay free until roughly
+**100,000 redirects per day**.
+
+| Resource         | Free tier (per day) | Usage here                                  |
+| ---------------- | ------------------- | ------------------------------------------- |
+| Workers requests | 100,000             | 1 per redirect + 1 per API call — the ceiling |
+| D1 rows read     | 5,000,000           | 1 indexed read per redirect — far below cap |
+| D1 rows written  | 100,000             | 1 append per click — comfortable             |
+| D1 storage       | 5 GB                | ~50 bytes/click → years of history          |
+
+Beyond ~100k redirects/day you'd move to the **Workers Paid** plan ($5/month,
+10M requests included, then ~$0.30/million); D1 stays effectively free for this
+workload. The [scale path](docs/ARCHITECTURE.md) (Analytics Engine / Durable
+Objects) only matters if click volume truly explodes.
+
+> Figures are order-of-magnitude and change over time — check Cloudflare's
+> current pricing before relying on them.
 
 ## How it works
 
