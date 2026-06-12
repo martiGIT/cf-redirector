@@ -13,3 +13,5 @@ All notable changes to this project are documented here. The format follows
 - REST API: create, list, get, delete links; per-code stats; full export (JSON/CSV).
 - Bearer API-key auth on all `/api/*` endpoints.
 - Vitest (workers pool) test suite and GitHub Actions CI.
+- Security tooling: Trivy (deps/secrets/misconfig), CodeQL, `npm audit`, and
+  Dependabot. Least-privilege workflow permissions. `SECURITY.md` disclosure policy.
