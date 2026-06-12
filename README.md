@@ -68,6 +68,9 @@ npm run db:schema:local            # local D1 tables
 npm run dev                        # http://localhost:8787
 ```
 
+For the full setup (auth, D1, secrets, custom domain) and automated CI/CD
+deploys, see **[docs/DEPLOY.md](docs/DEPLOY.md)**.
+
 ## API
 
 All `/api/*` endpoints require `Authorization: Bearer <API_KEY>`.
