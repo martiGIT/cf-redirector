@@ -37,10 +37,10 @@
   },
   "devDependencies": {
     "@biomejs/biome": "^2.5.0",
-    "@cloudflare/vitest-pool-workers": "^0.16.15",
+    "@cloudflare/vitest-pool-workers": "^0.16.17",
     "@cloudflare/workers-types": "^4.20260612.1",
     "typescript": "^6.0.3",
-    "vitest": "^4.1.8",
+    "vitest": "^4.1.9",
     "wrangler": "^4.100.0"
   }
 }
