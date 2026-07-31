@@ -43,7 +43,7 @@ jobs:
       # Upload only works when code scanning is enabled (public repos, or
       # private + GitHub Advanced Security). Non-fatal so CI stays green meanwhile.
       - name: Upload results to GitHub Security
-        uses: github/codeql-action/upload-sarif@v4
+        uses: github/codeql-action/upload-sarif@v4.37.3
         if: always()
         continue-on-error: true
         with:
