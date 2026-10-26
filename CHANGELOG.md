@@ -28,7 +28,7 @@ All notable changes to this project are documented here. The format follows
 - Test tooling migrated from the deprecated `@cloudflare/vitest-pool-workers` to
   `@cloudflare/vitest-plugin`.
 - Dev toolchain bumped: wrangler 4.152, vitest 5, TypeScript 7, workers-types 5,
-  Biome 2.6 (now also formats Markdown). CI uses `actions/setup-node@v7`.
+  Biome 2.6 (now also formats Markdown). CI uses `actions/checkout@v7` and `actions/setup-node@v7`.
 
 ### Security
 
