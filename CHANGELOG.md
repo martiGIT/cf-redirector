@@ -22,3 +22,18 @@ All notable changes to this project are documented here. The format follows
   click. Referrer breakdown added to `/api/stats/:code` and the panel.
 - `PATCH /api/links/:code` to edit a link's destination url / tags / metadata.
   The `/admin` panel gained edit and delete buttons per link.
+
+### Changed
+
+- Test tooling migrated from the deprecated `@cloudflare/vitest-pool-workers` to
+  `@cloudflare/vitest-plugin`.
+- Dev toolchain bumped: wrangler 4.152, vitest 5, TypeScript 7, workers-types 5,
+  Biome 2.6 (now also formats Markdown). CI uses `actions/setup-node@v7`.
+
+### Security
+
+- Resolved all `npm audit` advisories in dev dependencies (undici, zod, sharp,
+  vite, source-map-js, postcss). `overrides` in `package.json` force patched
+  undici/zod/sharp until miniflare and `@cloudflare/vitest-plugin` stop pinning
+  vulnerable versions. The Worker itself has no runtime dependencies and was not
+  affected.
