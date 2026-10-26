@@ -7,6 +7,7 @@ All notable changes to this project are documented here. The format follows
 ## [Unreleased]
 
 ### Added
+
 - Initial release: short-link resolver with `302` redirects on Cloudflare Workers + D1.
 - Append-only click logging via `ctx.waitUntil` (no added redirect latency, race-free).
 - Query-time bot filtering for messenger/preview crawlers (`?bots=exclude`).

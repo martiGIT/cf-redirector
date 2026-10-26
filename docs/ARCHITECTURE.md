@@ -27,7 +27,7 @@ visitor ──▶ │  Worker (src/index.ts)                                    
 
 ## Key decisions
 
-### 1. D1 as the single store (map *and* analytics)
+### 1. D1 as the single store (map _and_ analytics)
 
 A link map is a key→value lookup; click analytics is an event log. Both live in
 one D1 database. At newsletter/redirect volumes there is no reason to split them:
@@ -91,7 +91,7 @@ only that — is swapped for a buffered sink, **without touching the resolve pat
 
 - **Cloudflare Analytics Engine** absorbs the high-volume event stream (its writes
   do not count against D1), with a periodic rollup into D1 for permanent history; or
-- a **Durable Object** buffers in memory and flushes one batched D1 write per *N* clicks.
+- a **Durable Object** buffers in memory and flushes one batched D1 write per _N_ clicks.
 
 ### Optional read-path optimization
 

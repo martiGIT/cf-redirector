@@ -18,7 +18,7 @@ fills that gap:
 - **Zero added redirect latency** — one indexed lookup, then the click is logged in
   the background via `ctx.waitUntil`.
 - **Messenger-aware analytics** — WhatsApp/Telegram/Facebook preview crawlers create
-  phantom "clicks". Raw hits are stored and bots are filtered *at read time*
+  phantom "clicks". Raw hits are stored and bots are filtered _at read time_
   (`?bots=exclude`), so the filter is tunable and nothing is lost.
 - **Portable by design** — `GET /api/export` dumps your whole `code → url` map (JSON/CSV)
   so your links can outlive any single provider.
@@ -33,12 +33,12 @@ shortener that goes a long way. Every redirect is one Workers request, so that
 request limit is the effective ceiling — in practice you stay free until roughly
 **100,000 redirects per day**.
 
-| Resource         | Free tier (per day) | Usage here                                  |
-| ---------------- | ------------------- | ------------------------------------------- |
+| Resource         | Free tier (per day) | Usage here                                    |
+| ---------------- | ------------------- | --------------------------------------------- |
 | Workers requests | 100,000             | 1 per redirect + 1 per API call — the ceiling |
-| D1 rows read     | 5,000,000           | 1 indexed read per redirect — far below cap |
-| D1 rows written  | 100,000             | 1 append per click — comfortable             |
-| D1 storage       | 5 GB                | ~50 bytes/click → years of history          |
+| D1 rows read     | 5,000,000           | 1 indexed read per redirect — far below cap   |
+| D1 rows written  | 100,000             | 1 append per click — comfortable              |
+| D1 storage       | 5 GB                | ~50 bytes/click → years of history            |
 
 Beyond ~100k redirects/day you'd move to the **Workers Paid** plan ($5/month,
 10M requests included, then ~$0.30/million); D1 stays effectively free for this
@@ -126,21 +126,21 @@ curl "https://your.link/api/stats/spring?bots=exclude" -H "Authorization: Bearer
   "code": "spring",
   "total": 128,
   "excludeBots": true,
-  "byDay":     [{ "day": "2026-06-12", "clicks": 90 }, { "day": "2026-06-13", "clicks": 38 }],
+  "byDay": [{ "day": "2026-06-12", "clicks": 90 }, { "day": "2026-06-13", "clicks": 38 }],
   "byCountry": [{ "country": "PL", "clicks": 110 }, { "country": "DE", "clicks": 18 }]
 }
 ```
 
 ### Other endpoints
 
-| Method & path            | Description                                   |
-| ------------------------ | --------------------------------------------- |
-| `GET /api/links`         | List links (newest first; `?limit`, `?offset`)|
-| `GET /api/links/:code`   | One link + total click count                  |
-| `PATCH /api/links/:code` | Update destination url / tags / metadata      |
-| `DELETE /api/links/:code`| Delete a link and its clicks                  |
-| `GET /api/export`        | Full link-map dump (`?format=csv`)            |
-| `GET /health`            | Health check                                  |
+| Method & path             | Description                                    |
+| ------------------------- | ---------------------------------------------- |
+| `GET /api/links`          | List links (newest first; `?limit`, `?offset`) |
+| `GET /api/links/:code`    | One link + total click count                   |
+| `PATCH /api/links/:code`  | Update destination url / tags / metadata       |
+| `DELETE /api/links/:code` | Delete a link and its clicks                   |
+| `GET /api/export`         | Full link-map dump (`?format=csv`)             |
+| `GET /health`             | Health check                                   |
 
 ## Admin panel
 
@@ -159,12 +159,12 @@ token, never written into the page). For real SSO with no key handling, put
 
 Set in `wrangler.toml` under `[vars]` (non-secret) or via `wrangler secret`:
 
-| Name               | Type   | Default | Description                                         |
-| ------------------ | ------ | ------- | --------------------------------------------------- |
-| `API_KEY`          | secret | —       | Bearer token guarding every `/api/*` endpoint       |
-| `BASE_URL`         | var    | —       | Short domain, used to build `shortUrl` in responses |
+| Name               | Type   | Default | Description                                          |
+| ------------------ | ------ | ------- | ---------------------------------------------------- |
+| `API_KEY`          | secret | —       | Bearer token guarding every `/api/*` endpoint        |
+| `BASE_URL`         | var    | —       | Short domain, used to build `shortUrl` in responses  |
 | `REDIRECT_STATUS`  | var    | `302`   | `301`, `302` or `307`. Keep `302` for click tracking |
-| `DEFAULT_REDIRECT` | var    | `""`    | Where unknown codes go; empty = `404`               |
+| `DEFAULT_REDIRECT` | var    | `""`    | Where unknown codes go; empty = `404`                |
 
 ## Project layout
 

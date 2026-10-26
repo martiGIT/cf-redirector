@@ -150,12 +150,12 @@ jobs:
 Dashboard → **My Profile → API Tokens → Create Token**. Start from the
 **"Edit Cloudflare Workers"** template, then ensure these permissions:
 
-| Scope   | Permission        | Access |
-| ------- | ----------------- | ------ |
-| Account | Workers Scripts   | Edit   |
-| Account | D1                | Edit   |
-| Account | Account Settings  | Read   |
-| Zone    | Workers Routes    | Edit   | (only if you use a custom-domain route) |
+| Scope   | Permission       | Access |
+| ------- | ---------------- | ------ |
+| Account | Workers Scripts  | Edit   |
+| Account | D1               | Edit   |
+| Account | Account Settings | Read   |
+| Zone    | Workers Routes   | Edit   | (only if you use a custom-domain route) |
 
 Limit it to the relevant account (and zone). Copy the token once — it is shown
 only at creation.
