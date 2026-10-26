@@ -37,3 +37,5 @@ All notable changes to this project are documented here. The format follows
   undici/zod/sharp until miniflare and `@cloudflare/vitest-plugin` stop pinning
   vulnerable versions. The Worker itself has no runtime dependencies and was not
   affected.
+- Short-code generator no longer has modulo bias (CodeQL
+  `js/biased-cryptographic-random`): random bytes are now rejection-sampled.

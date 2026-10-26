@@ -1,11 +1,16 @@
 const ALPHABET = "0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ";
 
-/** Generate a random base62 short code using a CSPRNG. */
+// Largest multiple of the alphabet size that fits in a byte; bytes at or above
+// it are rejected so `b % ALPHABET.length` stays uniform.
+const UNBIASED_LIMIT = 256 - (256 % ALPHABET.length);
+
+/** Generate a random base62 short code using a CSPRNG (rejection sampling, no modulo bias). */
 export function generateCode(length = 7): string {
-  const bytes = crypto.getRandomValues(new Uint8Array(length));
   let out = "";
-  for (const b of bytes) {
-    out += ALPHABET.charAt(b % ALPHABET.length);
+  while (out.length < length) {
+    for (const b of crypto.getRandomValues(new Uint8Array(length))) {
+      if (b < UNBIASED_LIMIT && out.length < length) out += ALPHABET.charAt(b % ALPHABET.length);
+    }
   }
   return out;
 }
