@@ -36,11 +36,16 @@
     "db:schema:local": "wrangler d1 execute cf-redirector --local --file=./schema.sql"
   },
   "devDependencies": {
-    "@biomejs/biome": "^2.5.0",
-    "@cloudflare/vitest-pool-workers": "^0.16.18",
-    "@cloudflare/workers-types": "^4.20260621.1",
-    "typescript": "^6.0.3",
-    "vitest": "^4.1.9",
-    "wrangler": "^4.103.0"
+    "@biomejs/biome": "^2.6.3",
+    "@cloudflare/vitest-plugin": "^1.4.7",
+    "@cloudflare/workers-types": "^5.20261026.1",
+    "typescript": "^7.0.2",
+    "vitest": "^5.0.5",
+    "wrangler": "^4.152.0"
+  },
+  "overrides": {
+    "undici": "^7.30.1",
+    "zod": "^4.6.6",
+    "sharp": "^0.35.5"
   }
 }
